@@ -12,8 +12,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AdminDetailsPanel extends JPanel {
-    public AdminDetailsPanel(MainFrame mainFrame, Central central) {
+
+    private Central central;
+    private CardLayout cardLayout;
+    private JPanel mainPanel;
+
+    public AdminDetailsPanel(Central central,CardLayout cardLayout,JPanel mainPanel){
+        this.central = central;
+        this.cardLayout = cardLayout;
+        this.mainPanel = mainPanel;
+        init();
+    }
+
+    public void init() {
         setLayout(new GridBagLayout());
+        setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
 
@@ -89,6 +102,7 @@ public class AdminDetailsPanel extends JPanel {
 
         // Panel para calcular ganancias
         JPanel earningsPanel = new JPanel(new GridBagLayout());
+        earningsPanel.setBackground(Color.WHITE);
         earningsPanel.setBorder(BorderFactory.createTitledBorder("Calcular Ganancias"));
         GridBagConstraints epGbc = new GridBagConstraints();
         epGbc.insets = new Insets(5, 5, 5, 5);
@@ -158,28 +172,29 @@ public class AdminDetailsPanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                cardLayout.show(mainPanel, "adminLoginPanel"); // Volver a la pantalla de autenticación de administrador
+                cardLayout.show(mainPanel, "adminLoginPanel"); // Volver a la pantalla de autenticación de administrador
             }
         });
 
         calculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                try {
-//                    int month = monthComboBox.getSelectedIndex() + 1;
-//                    int operation = operationComboBox.getSelectedIndex() + 1;
-//                    float earnings = central.getMonthEarning(month, operation);
-//                    earningsLabel.setText("Ganancias: " + earnings);
-//                } catch (Exception ex) {
-//                    JOptionPane.showMessageDialog(mainPanel, "Error al calcular las ganancias: " + ex.getMessage());
-//                }
+                try {
+                    int month = monthComboBox.getSelectedIndex() + 1;
+                    int operation = operationComboBox.getSelectedIndex() + 1;
+                    float earnings = central.getMonthEarning(month, operation);
+                    earningsLabel.setText("Ganancias: " + earnings);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(mainPanel, "Error al calcular las ganancias: " + ex.getMessage());
+                }
             }
         });
 
         statsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                showStatsPanel();
+                mainPanel.add(new StatsPanel(central, cardLayout, mainPanel), "statsPanel");
+                cardLayout.show(mainPanel, "statsPanel");
             }
         });
     }

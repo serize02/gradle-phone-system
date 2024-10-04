@@ -32,7 +32,7 @@ public class StatsPanel extends JPanel {
 
     private void init() {
         setLayout(new BorderLayout());
-
+        setBackground(Color.WHITE);
         JLabel headerLabel = new JLabel("Estadísticas de Llamadas", JLabel.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
         add(headerLabel, BorderLayout.NORTH);
@@ -44,6 +44,7 @@ public class StatsPanel extends JPanel {
 
         JPanel controlPanel = new JPanel(new GridBagLayout());
         controlPanel.setBorder(BorderFactory.createTitledBorder("Panel de Control"));
+        controlPanel.setBackground(Color.WHITE);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -102,7 +103,7 @@ public class StatsPanel extends JPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "adminDetailsPanel");
+                cardLayout.show(mainPanel, "adminPanel");
             }
         });
     }
