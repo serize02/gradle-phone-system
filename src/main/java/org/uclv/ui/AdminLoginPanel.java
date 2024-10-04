@@ -56,7 +56,7 @@ public class AdminLoginPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Lógica de autenticación de administrador
                 if(codeField.getText().equals("admin")) {
-                    mainPanel.add(new AdminDetailsPanel(central, cardLayout, mainPanel), "adminPanel");
+                    mainPanel.add(new AdminPanel(central, cardLayout, mainPanel), "adminPanel");
                     cardLayout.show(mainPanel, "adminPanel");
                 } else {
                     JOptionPane.showMessageDialog(mainPanel, "Invalid Admin Code");

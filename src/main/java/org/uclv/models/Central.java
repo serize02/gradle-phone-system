@@ -260,10 +260,12 @@ public class Central {
         Map<String, Integer> map = new HashMap<>();
 
         for(Call call: calls_history){
-            if(map.containsKey(call.getReceiverCountryCode())) {
-                map.put(call.getReceiverCountryCode(), map.get(call.getReceiverCountryCode()) + 1);
-            } else {
-                map.put(call.getReceiverCountryCode(), 1);
+            if (call.getMonth() >= start && call.getMonth() <= end){
+                if(map.containsKey(call.getReceiverCountryCode())) {
+                    map.put(call.getReceiverCountryCode(), map.get(call.getReceiverCountryCode()) + 1);
+                } else {
+                    map.put(call.getReceiverCountryCode(), 1);
+                }
             }
         }
 

@@ -11,13 +11,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AdminDetailsPanel extends JPanel {
+public class AdminPanel extends JPanel {
 
     private Central central;
     private CardLayout cardLayout;
     private JPanel mainPanel;
 
-    public AdminDetailsPanel(Central central,CardLayout cardLayout,JPanel mainPanel){
+    public AdminPanel(Central central, CardLayout cardLayout, JPanel mainPanel){
         this.central = central;
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
@@ -182,8 +182,11 @@ public class AdminDetailsPanel extends JPanel {
                 try {
                     int month = monthComboBox.getSelectedIndex() + 1;
                     int operation = operationComboBox.getSelectedIndex() + 1;
-                    float earnings = central.getMonthEarning(month, operation);
+                    float earnings = central.getMonthEarning(operation, month);
                     earningsLabel.setText("Ganancias: " + earnings);
+
+                    System.out.println(month + " " + operation + "    " + earnings);
+
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainPanel, "Error al calcular las ganancias: " + ex.getMessage());
                 }
