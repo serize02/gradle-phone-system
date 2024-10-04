@@ -48,9 +48,9 @@ public class Central {
         return clients;
     }
 
-    public Client verifyClient(String code) throws InvalidCredentialsE {
+    public Client verifyClient(String username, String code) throws InvalidCredentialsE {
         for (Client client : clients) {
-            if (client.getCode().equals(code)) {
+            if (client.getUsername().equals(username) && client.getCode().equals(code)) {
                 return client;
             }
         }
@@ -71,16 +71,12 @@ public class Central {
      *
      * @param client The client to be added
      */
-    public void addClient(Client client) {
+    public void addClient(Client client) throws ClientAlreadyExistsE {
         if (!clients.contains(client)) {
             clients.add(client);
-            clients.sort(new Comparator<Client>() {
-                @Override
-                public int compare(Client o1, Client o2) {
-                    return o1.getCode().compareTo(o2.getCode());
-                }
-            });
+            return;
         }
+        throw new ClientAlreadyExistsE();
     }
 
     //TODO E

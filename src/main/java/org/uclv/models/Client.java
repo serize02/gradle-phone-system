@@ -9,14 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
+
     // TODO toString
+    private String username;
     private String code;
     private List<PhoneNumber> phone_numbers = new ArrayList<>();
     private char type;
 
-    public Client(String code, char type) {
+    public Client(String username, String code, char type) {
+        this.username = username;
         this.code = code;
         this.type = type;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     // TODO check the letters and numbers

@@ -1,7 +1,7 @@
 package org.uclv.exceptions;
 
-public class ClientAlreadyExistsE {
+public class ClientAlreadyExistsE extends Exception {
     public ClientAlreadyExistsE() {
-        System.out.println("Client already exists");
+        super("Client already exists");
     }
 }
