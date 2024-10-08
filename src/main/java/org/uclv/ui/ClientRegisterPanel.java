@@ -1,6 +1,7 @@
 package org.uclv.ui;
 
 import org.uclv.exceptions.ClientAlreadyExistsE;
+import org.uclv.exceptions.WrongCodeFormatE;
 import org.uclv.models.Central;
 import org.uclv.models.Client;
 
@@ -9,9 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static org.uclv.Main.styleButton;
-import static org.uclv.Main.styleTextField;
-import static org.uclv.Main.styleRedButton;
+import static org.uclv.Main.*;
 
 public class ClientRegisterPanel extends JPanel {
 
@@ -33,7 +32,7 @@ public class ClientRegisterPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel usernameLabel = new JLabel("Username:");
+        JLabel usernameLabel = new JLabel("Nombre de usuario:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(usernameLabel, gbc);
@@ -43,7 +42,7 @@ public class ClientRegisterPanel extends JPanel {
         gbc.gridx = 1;
         add(usernameField, gbc);
 
-        JLabel codeLabel = new JLabel("Client Code:");
+        JLabel codeLabel = new JLabel("Contraseña:");
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(codeLabel, gbc);
@@ -53,7 +52,7 @@ public class ClientRegisterPanel extends JPanel {
         gbc.gridx = 1;
         add(codeField, gbc);
 
-        JLabel typeLabel = new JLabel("Client Type:");
+        JLabel typeLabel = new JLabel("Tipo de Cliente:");
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(typeLabel, gbc);
@@ -64,14 +63,14 @@ public class ClientRegisterPanel extends JPanel {
         gbc.gridx = 1;
         add(typeComboBox, gbc);
 
-        JButton registerButton = new JButton("Register");
+        JButton registerButton = new JButton("Registrarse");
         styleButton(registerButton);
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         add(registerButton, gbc);
 
-        JButton backButton = new JButton("Back");
+        JButton backButton = new JButton("Atrás");
         styleRedButton(backButton);
         gbc.gridy = 4;
         add(backButton, gbc);
@@ -82,6 +81,7 @@ public class ClientRegisterPanel extends JPanel {
                 String username = usernameField.getText();
                 String code = new String(codeField.getPassword());
                 char type = typeComboBox.getSelectedIndex() == 0 ? 'E' : 'P';
+
                 try {
                     central.addClient(new Client(username, code, type));
                     JOptionPane.showMessageDialog(mainPanel, "Cliente registrado exitosamente");
@@ -90,7 +90,10 @@ public class ClientRegisterPanel extends JPanel {
                     cardLayout.show(mainPanel, "clientPanel");
                 } catch (ClientAlreadyExistsE ex) {
                     JOptionPane.showMessageDialog(mainPanel, "El cliente ya existe");
+                } catch (WrongCodeFormatE ex) {
+                    JOptionPane.showMessageDialog(mainPanel, "El nombre de usuario debe ser alfanumérico");
                 }
+
             }
         });
 

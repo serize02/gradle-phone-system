@@ -16,7 +16,7 @@ public class PhoneNumber {
 
     private String number;
 
-    public String getCountry_code() {
+    public String getCountryCode() {
         return country_code;
     }
 
@@ -31,20 +31,31 @@ public class PhoneNumber {
     }
 
     private void verifyFormat(String cc, String number) throws WrongPhoneNumberFormatE {
-
-        if(cc.length() == 0 || number.length() == 0 || cc.charAt(0) != '+'){
+        if(cc.isEmpty() || number.isEmpty() || cc.charAt(0) != '+' || cc.length() != 4){
             throw new WrongPhoneNumberFormatE();
         }
-        for(int i = 1; i < cc.length(); i++){
-            if(!Character.isDigit(cc.charAt(i))){
-                throw new WrongPhoneNumberFormatE();
+
+        int index = 1;
+        boolean wrong_format = false;
+
+        while(index < cc.length() && !wrong_format) {
+            if(!Character.isDigit(cc.charAt(index))){
+                wrong_format = true;
             }
+            index++;
         }
-        for(int i = 0; i < number.length(); i++){
-            if(!Character.isDigit(number.charAt(i))){
-                throw new WrongPhoneNumberFormatE();
+
+        index = 0;
+
+        while(index < number.length() && !wrong_format) {
+            if(!Character.isDigit(number.charAt(index))){
+                wrong_format = true;
             }
+            index++;
         }
+
+        if (wrong_format)
+            throw new WrongPhoneNumberFormatE();
     }
 
     @Override
