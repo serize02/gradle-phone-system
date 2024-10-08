@@ -15,16 +15,10 @@ public class Main {
     private static JPanel mainPanel;
 
     public static void main(String[] args) {
-        // Inicializar datos de ejemplo
+        // Set central's data
         central = new Central("5301", "123 Main St.", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        try {
-            central.addTax(new Tax("+43", "5301", 0.1f));
-            central.addTax(new Tax("+01", "5301", 0.1f));
-        } catch (Exception TaxAlreadyExists) {
-            JOptionPane.showMessageDialog(mainPanel, "Tax Already Exists");
-        }
-
+        // Initialize values
         MainFrame mainFrame = new MainFrame();
         cardLayout = mainFrame.getCardLayout();
         mainPanel = mainFrame.getMainPanel();
@@ -35,15 +29,24 @@ public class Main {
         mainFrame.setVisible(true);
     }
 
+    /**
+     * Styles a button
+     * @param button The button to be styled
+     *
+     */
     public static void styleButton(JButton button) {
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setBackground(new Color(30, 144, 255));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Ajustar el padding
-        button.setPreferredSize(new Dimension(100, 30)); // Establecer tamaño preferido
+        button.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        button.setPreferredSize(new Dimension(150, 30));
     }
 
+    /**
+     * Styles a button (Red)
+     * @param button The button to be styled
+     */
     public static void styleRedButton(JButton button) {
         button.setFont(new Font("Arial", Font.BOLD, 16));
         button.setBackground(Color.RED);
@@ -53,6 +56,10 @@ public class Main {
         button.setPreferredSize(new Dimension(100, 30)); // Establecer tamaño preferido
     }
 
+    /**
+     * Styles a text field
+     * @param textField The textField to be styled
+     */
     public static void styleTextField(JTextField textField) {
         textField.setFont(new Font("Arial", Font.PLAIN, 16));
         textField.setBorder(BorderFactory.createCompoundBorder(

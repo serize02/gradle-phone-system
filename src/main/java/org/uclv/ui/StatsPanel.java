@@ -8,6 +8,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.uclv.exceptions.WrongPeriodFormatE;
+import org.uclv.models.Call;
 import org.uclv.models.Central;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class StatsPanel extends JPanel {
     private void init() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createEmptyBorder(70,70,70,70));
+        setBorder(BorderFactory.createEmptyBorder(70, 70, 70, 70));
 
         JLabel headerLabel = new JLabel("Estadísticas de Llamadas", JLabel.CENTER);
         headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
@@ -50,7 +51,7 @@ public class StatsPanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        controlPanel.add(new JLabel("Periodo (mm-yyyy):"), gbc);
+        controlPanel.add(new JLabel("Periodo (mm-mm):"), gbc);
 
         JTextField periodField = new JTextField("1-12", 10);
         gbc.gridx = 1;
@@ -64,11 +65,11 @@ public class StatsPanel extends JPanel {
         gbc.gridx = 1;
         controlPanel.add(minCallsField, gbc);
 
-        JButton showChartButton = new JButton("Mostrar Gráfico");
+        JButton showHotCountriesButton = new JButton("Mostrar Gráfico");
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
-        controlPanel.add(showChartButton, gbc);
+        controlPanel.add(showHotCountriesButton, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -81,17 +82,17 @@ public class StatsPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
-        hotProvincePanel.add(new JLabel("Periodo (mm-mm):"), gbc);
+        hotProvincePanel.add(new JLabel("Período (mm-mm):"), gbc);
 
         JTextField hotProvincePeriodField = new JTextField("1-12", 10);
         gbc.gridx = 1;
         hotProvincePanel.add(hotProvincePeriodField, gbc);
 
-        JButton showHotProvinceButton = new JButton("Mostrar");
+        JButton showHotProvincesButton = new JButton("Mostrar");
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
-        hotProvincePanel.add(showHotProvinceButton, gbc);
+        hotProvincePanel.add(showHotProvincesButton, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -134,19 +135,19 @@ public class StatsPanel extends JPanel {
         add(controlAndChartPanel, BorderLayout.WEST);
 
         JPanel chartContainerPanel = new JPanel(new BorderLayout());
-        chartContainerPanel.setBorder(BorderFactory.createTitledBorder("Gráfico de Llamadas"));
+        chartContainerPanel.setBorder(BorderFactory.createTitledBorder("Gráfico de Países más Llamados"));
         chartContainerPanel.setPreferredSize(new Dimension(800, 400)); // Adjusted size
 
         add(chartContainerPanel, BorderLayout.CENTER);
 
-        displayChart(chartContainerPanel, "1-12", 0);
+        displayHotCountriesChart(chartContainerPanel, "1-12", 0);
 
-        showChartButton.addActionListener(new ActionListener() {
+        showHotCountriesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String period = periodField.getText().trim();
                 int minCalls = Integer.parseInt(minCallsField.getText().trim());
-                displayChart(chartContainerPanel, period, minCalls);
+                displayHotCountriesChart(chartContainerPanel, period, minCalls);
             }
         });
 
@@ -157,17 +158,13 @@ public class StatsPanel extends JPanel {
             }
         });
 
-        showHotProvinceButton.addActionListener(new ActionListener() {
+        showHotProvincesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String period = hotProvincePeriodField.getText().trim();
                 try {
-                    List<Map.Entry<String, Integer>> hotCountries = central.getHotCountries(period, 0);
-                    if (hotCountries.isEmpty()) {
-                        JOptionPane.showMessageDialog(mainPanel, "No hay datos que analizar");
-                    } else {
-                        // Handle the display of hot countries
-                    }
+                    List<Map.Entry<String, Integer>> hotProvinces = central.getProvinces(period);
+                    displayHotProvincesChart(chartContainerPanel, hotProvinces);
                 } catch (WrongPeriodFormatE ex) {
                     JOptionPane.showMessageDialog(mainPanel, "Formato de período incorrecto");
                 }
@@ -178,28 +175,49 @@ public class StatsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 float maxPrice = Float.parseFloat(maxPriceField.getText().trim());
-                List<String> overpays = central.getOverPays(maxPrice);
-                if (overpays.isEmpty()) {
-                    JOptionPane.showMessageDialog(mainPanel, "No hay llamadas para mostrar");
-                } else {
-                    JOptionPane.showMessageDialog(mainPanel, "Llamadas a sobreprecio: " + String.join(", ", overpays));
-                }
+                List<Call> overpays = central.getOverPays(maxPrice);
+                displayOverpricedCallsTable(chartContainerPanel, overpays);
             }
         });
     }
 
-    private void displayChart(JPanel chartContainerPanel, String period, int minCalls) {
+    private void displayOverpricedCallsTable(JPanel chartContainerPanel, List<Call> overpays) {
+        chartContainerPanel.removeAll();
+        chartContainerPanel.setBorder(BorderFactory.createTitledBorder("Tabla de Llamadas a Sobreprecio"));
+
+        if (overpays.isEmpty()) {
+            displayNoData(chartContainerPanel);
+            return;
+        } else {
+            String[] columnNames = {"Número del Emisor", "País del Receptor", "Localización del Receptor", "Costo de la Llamada"};
+            Object[][] data = new Object[overpays.size()][4];
+            for (int i = 0; i < overpays.size(); i++) {
+                Call call = overpays.get(i);
+                data[i][0] = call.getSenderPhone();
+                data[i][1] = call.getReceiverCountryCode();
+                data[i][2] = call.getReceiverLocationCode();
+                data[i][3] = central.getCallCost(call);
+            }
+
+            JTable table = new JTable(data, columnNames);
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            table.setFillsViewportHeight(true);
+
+            chartContainerPanel.add(scrollPane, BorderLayout.CENTER);
+        }
+
+        chartContainerPanel.revalidate();
+        chartContainerPanel.repaint();
+    }
+
+    private void displayHotCountriesChart(JPanel chartContainerPanel, String period, int minCalls) {
         try {
+            chartContainerPanel.setBorder(BorderFactory.createTitledBorder("Gráfico de Países más Llamados"));
             List<Map.Entry<String, Integer>> hotCountries = central.getHotCountries(period, minCalls);
 
             if (hotCountries.isEmpty()) {
-                chartContainerPanel.removeAll();
-                JLabel noDataLabel = new JLabel("No hay datos que analizar", JLabel.CENTER);
-                noDataLabel.setFont(new Font("Arial", Font.BOLD, 18));
-                chartContainerPanel.setBackground(Color.WHITE);
-                chartContainerPanel.add(noDataLabel, BorderLayout.CENTER);
-                chartContainerPanel.revalidate();
-                chartContainerPanel.repaint();
+                displayNoData(chartContainerPanel);
                 return;
             }
 
@@ -209,9 +227,9 @@ public class StatsPanel extends JPanel {
             }
 
             JFreeChart chart = ChartFactory.createLineChart(
-                    "Hot Countries",
-                    "Country Code",
-                    "Number of Calls",
+                    "Países más llamados",
+                    "Código de país",
+                    "Número de llamadas",
                     dataset,
                     PlotOrientation.VERTICAL,
                     true,
@@ -235,4 +253,53 @@ public class StatsPanel extends JPanel {
             JOptionPane.showMessageDialog(mainPanel, "Formato de período incorrecto");
         }
     }
+
+    private void displayHotProvincesChart(JPanel chartContainerPanel, List<Map.Entry<String, Integer>> hotProvinces) {
+        chartContainerPanel.setBorder(BorderFactory.createTitledBorder("Gráfico de Provincias más Llamadas"));
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        if (hotProvinces.isEmpty()) {
+            displayNoData(chartContainerPanel);
+            return;
+        }
+
+        for (Map.Entry<String, Integer> entry : hotProvinces) {
+            dataset.addValue(entry.getValue(), "Llamadas", entry.getKey());
+        }
+
+        JFreeChart chart = ChartFactory.createLineChart(
+                "Provincias más llamadas",
+                "Provincia",
+                "Número de llamadas",
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false
+        );
+
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.setBackgroundPaint(Color.WHITE);
+
+        LineAndShapeRenderer renderer = new LineAndShapeRenderer();
+        renderer.setSeriesPaint(0, Color.BLUE);
+        renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+        plot.setRenderer(renderer);
+
+        chartContainerPanel.removeAll();
+        chartContainerPanel.add(new ChartPanel(chart), BorderLayout.CENTER);
+        chartContainerPanel.revalidate();
+        chartContainerPanel.repaint();
+    }
+
+    private void displayNoData(JPanel chartContainerPanel) {
+        chartContainerPanel.removeAll();
+        JLabel noDataLabel = new JLabel("No hay datos que analizar", JLabel.CENTER);
+        noDataLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        chartContainerPanel.setBackground(Color.WHITE);
+        chartContainerPanel.add(noDataLabel, BorderLayout.CENTER);
+        chartContainerPanel.revalidate();
+        chartContainerPanel.repaint();
+    }
+
 }

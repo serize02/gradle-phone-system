@@ -29,24 +29,24 @@ public class AdminLoginPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel codeLabel = new JLabel("Admin Code:");
+        JLabel codeLabel = new JLabel("Código de acceso:");
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(codeLabel, gbc);
 
-        JPasswordField codeField = new JPasswordField(15);
-        styleTextField(codeField);
+        JPasswordField passwordField = new JPasswordField(15);
+        styleTextField(passwordField);
         gbc.gridx = 1;
-        add(codeField, gbc);
+        add(passwordField, gbc);
 
-        JButton loginButton = new JButton("Login");
+        JButton loginButton = new JButton("Iniciar Sesión");
         styleButton(loginButton);
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
         add(loginButton, gbc);
 
-        JButton backButton = new JButton("Back");
+        JButton backButton = new JButton("Atrás");
         styleRedButton(backButton);
         gbc.gridy = 2;
         add(backButton, gbc);
@@ -54,12 +54,13 @@ public class AdminLoginPanel extends JPanel {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica de autenticación de administrador
-                if(codeField.getText().equals("admin")) {
+                if(passwordField.getText().equals("admin")){
                     mainPanel.add(new AdminPanel(central, cardLayout, mainPanel), "adminPanel");
                     cardLayout.show(mainPanel, "adminPanel");
+                    // Reset value
+                    passwordField.setText("");
                 } else {
-                    JOptionPane.showMessageDialog(mainPanel, "Invalid Admin Code");
+                    JOptionPane.showMessageDialog(mainPanel, "Código de acceso erróneo");
                 }
             }
         });

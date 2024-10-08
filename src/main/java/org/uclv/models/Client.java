@@ -1,24 +1,22 @@
 package org.uclv.models;
 
-
-
 import org.uclv.exceptions.PhoneAlreadyExists;
 import org.uclv.exceptions.PhoneNumberDoesNotExistsE;
+import org.uclv.exceptions.WrongCodeFormatE;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
-
-    // TODO toString
     private String username;
-    private String code;
+    private String password;
     private List<PhoneNumber> phone_numbers = new ArrayList<>();
     private char type;
 
-    public Client(String username, String code, char type) {
+    public Client(String username, String password, char type) throws WrongCodeFormatE {
+        verifyFormat(username);
         this.username = username;
-        this.code = code;
+        this.password = password;
         this.type = type;
     }
 
@@ -27,8 +25,8 @@ public class Client {
     }
 
     // TODO check the letters and numbers
-    public String getCode() {
-        return code;
+    public String getPassword() {
+        return password;
     }
 
     public char getType() {
@@ -38,6 +36,23 @@ public class Client {
     //TODO check the numbers
     public List<PhoneNumber> getPhoneNumbers() {
         return phone_numbers;
+    }
+
+    private void verifyFormat(String username) throws WrongCodeFormatE {
+        boolean wrong_username = false;
+        int index = 0;
+
+        while (index < username.length() && !wrong_username) {
+            if (!Character.isLetterOrDigit(username.charAt(index))) {
+                wrong_username = true;
+            }
+            index++;
+        }
+
+        if (wrong_username) {
+            throw new WrongCodeFormatE();
+        }
+
     }
 
     //CHANGE

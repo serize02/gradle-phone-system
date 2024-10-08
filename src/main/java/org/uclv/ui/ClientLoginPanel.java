@@ -34,14 +34,14 @@ public class ClientLoginPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.NONE;
 
-        JLabel welcomeLabel = new JLabel("Welcome to Phone-System Elecsa", JLabel.CENTER);
+        JLabel welcomeLabel = new JLabel("Bienvenido a Unify", JLabel.CENTER);
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         add(welcomeLabel, gbc);
 
-        JLabel usernameLabel = new JLabel("Username:");
+        JLabel usernameLabel = new JLabel("Nombre de usuario:");
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -52,7 +52,7 @@ public class ClientLoginPanel extends JPanel {
         gbc.gridx = 1;
         add(usernameField, gbc);
 
-        JLabel codeLabel = new JLabel("Client Code:");
+        JLabel codeLabel = new JLabel("Contraseña:");
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(codeLabel, gbc);
@@ -62,20 +62,20 @@ public class ClientLoginPanel extends JPanel {
         gbc.gridx = 1;
         add(codeField, gbc);
 
-        JButton loginButton = new JButton("Login");
+        JButton loginButton = new JButton("Iniciar Sesión");
         styleButton(loginButton);
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         add(loginButton, gbc);
 
-        JLabel createAccountLabel = new JLabel("Crear cuenta?");
+        JLabel createAccountLabel = new JLabel("Crear cuenta");
         createAccountLabel.setForeground(Color.BLUE.darker());
         createAccountLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         gbc.gridy = 4;
         add(createAccountLabel, gbc);
 
-        JLabel adminLoginLabel = new JLabel("Admin Login?");
+        JLabel adminLoginLabel = new JLabel("Iniciar Sesión como Administrador");
         adminLoginLabel.setForeground(Color.BLUE.darker());
         adminLoginLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         gbc.gridy = 5;
@@ -91,6 +91,9 @@ public class ClientLoginPanel extends JPanel {
                     Client client = central.verifyClient(username, code);
                     mainPanel.add( new ClientPanel(client, central,  cardLayout, mainPanel) );
                     cardLayout.show(mainPanel, "clientPanel");
+                    // Reset fields' values
+                    usernameField.setText("");
+                    codeField.setText("");
                 } catch (InvalidCredentialsE ex) {
                     JOptionPane.showMessageDialog(mainPanel, "Credenciales incorrectas");
                 }
@@ -102,6 +105,9 @@ public class ClientLoginPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 mainPanel.add( new ClientRegisterPanel(central, cardLayout, mainPanel), "clientRegisterPanel" );
                 cardLayout.show(mainPanel, "clientRegisterPanel");
+                // Reset fields' values
+                usernameField.setText("");
+                codeField.setText("");
             }
         });
 
@@ -110,6 +116,9 @@ public class ClientLoginPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 mainPanel.add( new AdminLoginPanel(central, cardLayout, mainPanel), "adminLoginPanel" );
                 cardLayout.show(mainPanel, "adminLoginPanel");
+                // Reset fields' values
+                usernameField.setText("");
+                codeField.setText("");
             }
         });
 
