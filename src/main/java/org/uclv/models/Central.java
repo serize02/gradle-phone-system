@@ -34,6 +34,14 @@ public class Central implements Serializable {
         this.taxes = taxes;
     }
 
+    public Central(String name, String address) {
+        this.name = name;
+        this.address = address;
+        this.clients = new ArrayList<>();
+        this.calls_history = new ArrayList<>();
+        this.taxes = new ArrayList<>();
+    }
+
     public String getName() {
         return name;
     }

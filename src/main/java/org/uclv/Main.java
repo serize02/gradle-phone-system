@@ -1,6 +1,5 @@
 package org.uclv;
 
-import org.uclv.exceptions.*;
 import org.uclv.models.*;
 import org.uclv.ui.ClientLoginPanel;
 import org.uclv.ui.MainFrame;
@@ -8,38 +7,33 @@ import org.uclv.ui.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
-    private static Central central;
+    private static Central central = new Central("5301", "123 Main St.");
     private static CardLayout cardLayout;
     private static JPanel mainPanel;
 
     public static void main(String[] args) {
-        // Set central's data
-        List<Client> clients = new ArrayList<>();
-        List<Tax> taxes = new ArrayList<>();
-        List<Call> calls = new ArrayList<>();
-        List<PhoneNumber> phoneNumbers = new ArrayList<>();
-        central = new Central("5301", "123 Main St.",clients,calls,taxes);
         try{
-            central=Main.importData();
+            central= importData();
+
+            for( Client client : central.getClients()){
+                System.out.println(client.getUsername());
+            }
+//             Initialize values
+            MainFrame mainFrame = new MainFrame();
+            cardLayout = mainFrame.getCardLayout();
+            mainPanel = mainFrame.getMainPanel();
+
+            mainPanel.add(new ClientLoginPanel(central, cardLayout, mainPanel), "clientLoginPanel");
+            cardLayout.show(mainPanel, "clientLoginPanel");
+
+            mainFrame.setVisible(true);
         }
         catch (IOException | ClassNotFoundException ex){
-
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        // Initialize values
-        MainFrame mainFrame = new MainFrame();
-        cardLayout = mainFrame.getCardLayout();
-        mainPanel = mainFrame.getMainPanel();
-
-        mainPanel.add(new ClientLoginPanel(central, cardLayout, mainPanel), "clientLoginPanel");
-        cardLayout.show(mainPanel, "clientLoginPanel");
-
-        mainFrame.setVisible(true);
     }
 
     public static void exportData() throws IOException {
@@ -49,7 +43,7 @@ public class Main {
     }
 
     public static Central importData() throws IOException, ClassNotFoundException {
-        ObjectInputStream is = new ObjectInputStream(new FileInputStream("src/main/java/org/uclv/data.data.dat"));
+        ObjectInputStream is = new ObjectInputStream(new FileInputStream("src\\main\\java\\org\\uclv\\data\\data.dat"));
         Central central = (Central) is.readObject();
         is.close();
         return central;

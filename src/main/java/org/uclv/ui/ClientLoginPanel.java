@@ -85,11 +85,11 @@ public class ClientLoginPanel extends JPanel {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String code = new String(codeField.getPassword());
+                String username = usernameField.getText().trim();
+                String code = new String (codeField.getPassword());
                 try {
                     Client client = central.verifyClient(username, code);
-                    mainPanel.add( new ClientPanel(client, central,  cardLayout, mainPanel) );
+                    mainPanel.add( new ClientPanel(client, central,  cardLayout, mainPanel), "clientPanel" );
                     cardLayout.show(mainPanel, "clientPanel");
                     // Reset fields' values
                     usernameField.setText("");
