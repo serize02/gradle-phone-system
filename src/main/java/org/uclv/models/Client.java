@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String username;
     private String password;
     private List<PhoneNumber> phone_numbers = new ArrayList<>();

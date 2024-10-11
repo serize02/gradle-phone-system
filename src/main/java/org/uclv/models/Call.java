@@ -3,6 +3,9 @@ package org.uclv.models;
 import java.io.Serializable;
 
 public class Call implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String sender_country_code;
     private String sender_location_code;
     private String sender_phone;

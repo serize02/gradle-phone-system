@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 
 public class Tax implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String country_code;
     private String central_code;
     private float value;

@@ -7,7 +7,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-public class Central {
+public class Central implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String name;
     // TODO Check whether the name is valid or not
     private String address;
@@ -314,29 +317,42 @@ public class Central {
         rounded_owe = rounded_owe.setScale(2, RoundingMode.HALF_UP);
         return rounded_owe.floatValue();
     }
-    public void keepClients() throws IOException{
-        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("clients.dat"));
-        for(Client client: clients){
-            os.writeObject(client);
-        }
-        os.close();
-    }
-    public void keepCalls() throws IOException{
-        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("calls.dat"));
-        for(Call call : calls_history){
-            os.writeObject(call);
-        }
+
+//    public void keepClients() throws IOException{
+//        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("clients.dat"));
+//        for(Client client: clients){
+//            os.writeObject(client);
+//        }
+//        os.close();
+//    }
+//    public void keepCalls() throws IOException{
+//        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("calls.dat"));
+//        for(Call call : calls_history){
+//            os.writeObject(call);
+//        }
+//        os.close();
+//    }
+//
+//    public void keepTaxes() throws IOException{
+//        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("taxes.dat"));
+//        for(Tax tax : taxes){
+//            os.writeObject(tax);
+//        }
+//        os.close();
+//    }
+
+    public void exportData(Central central) throws IOException {
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("data/data.dat"));
+        os.writeObject(central);
         os.close();
     }
 
-    public void keepTaxes() throws IOException{
-        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("taxes.dat"));
-        for(Tax tax : taxes){
-            os.writeObject(tax);
-        }
-        os.close();
+    public static Central importData() throws IOException, ClassNotFoundException {
+        ObjectInputStream is = new ObjectInputStream(new FileInputStream("data/data.dat"));
+        Central central = (Central) is.readObject();
+        is.close();
+        return central;
     }
-
 }
 
 

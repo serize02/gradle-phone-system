@@ -6,6 +6,9 @@ import org.uclv.exceptions.WrongPhoneNumberFormatE;
 import java.io.Serializable;
 
 public class PhoneNumber implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String country_code;
 
     public String getNumber() {
