@@ -7,6 +7,7 @@ import org.uclv.ui.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class Main {
         List<Call> calls = new ArrayList<>();
         List<PhoneNumber> phoneNumbers = new ArrayList<>();
         central = new Central("5301", "123 Main St.",clients,calls,taxes);
+
         try {
             Client c1=new Client("amalis05","0231",'P');
             central.addClient(c1);
@@ -33,7 +35,6 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-
         // Initialize values
         MainFrame mainFrame = new MainFrame();
         cardLayout = mainFrame.getCardLayout();
@@ -43,6 +44,19 @@ public class Main {
         cardLayout.show(mainPanel, "clientLoginPanel");
 
         mainFrame.setVisible(true);
+    }
+
+    public static void exportData() throws IOException {
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("data.dat"));
+        os.writeObject(central);
+        os.close();
+    }
+
+    public static Central importData() throws IOException, ClassNotFoundException {
+        ObjectInputStream is = new ObjectInputStream(new FileInputStream("data/data.dat"));
+        Central central = (Central) is.readObject();
+        is.close();
+        return central;
     }
 
     /**

@@ -340,19 +340,6 @@ public class Central implements Serializable {
 //        }
 //        os.close();
 //    }
-
-    public void exportData(Central central) throws IOException {
-        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("data/data.dat"));
-        os.writeObject(central);
-        os.close();
-    }
-
-    public static Central importData() throws IOException, ClassNotFoundException {
-        ObjectInputStream is = new ObjectInputStream(new FileInputStream("data/data.dat"));
-        Central central = (Central) is.readObject();
-        is.close();
-        return central;
-    }
 }
 
 
