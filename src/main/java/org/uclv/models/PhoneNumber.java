@@ -3,7 +3,9 @@ package org.uclv.models;
 
 import org.uclv.exceptions.WrongPhoneNumberFormatE;
 
-public class PhoneNumber {
+import java.io.Serializable;
+
+public class PhoneNumber implements Serializable {
     private String country_code;
 
     public String getNumber() {

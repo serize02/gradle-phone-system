@@ -53,6 +53,7 @@ public class AdminPanel extends JPanel {
         String[] clientColumns = {"Código", "Tipo", "Números de Teléfono"};
         Object[][] clientData = new Object[central.getClients().size()][3];
         int i = 0;
+
         for (Client client : central.getClients()) {
             clientData[i][0] = client.getUsername();
             clientData[i][1] = client.getType() == 'E' ? "Estatal" : "Particular";

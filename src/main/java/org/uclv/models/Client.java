@@ -4,10 +4,11 @@ import org.uclv.exceptions.PhoneAlreadyExists;
 import org.uclv.exceptions.PhoneNumberDoesNotExistsE;
 import org.uclv.exceptions.WrongCodeFormatE;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Client {
+public class Client implements Serializable {
     private String username;
     private String password;
     private List<PhoneNumber> phone_numbers = new ArrayList<>();

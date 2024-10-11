@@ -3,9 +3,10 @@ package org.uclv.models;
 import org.uclv.exceptions.WrongCodeFormatE;
 import org.uclv.exceptions.WrongTaxCodeE;
 
+import java.io.Serializable;
 import java.util.logging.Logger;
 
-public class Tax {
+public class Tax implements Serializable {
     private String country_code;
     private String central_code;
     private float value;

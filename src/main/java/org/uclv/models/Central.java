@@ -2,6 +2,7 @@ package org.uclv.models;
 
 import org.uclv.exceptions.*;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -12,18 +13,17 @@ public class Central {
     private String address;
     private List<Client> clients;
     private List<Tax> taxes;
+    private List<Call> calls_history;
 
     public List<Call> getCalls() {
         return calls_history;
     }
 
-    private List<Call> calls_history;
-
     public List<Tax> getTaxes() {
         return taxes;
     }
 
-    public Central(String name, String address, ArrayList<Client> clients, ArrayList<Call> calls_history, ArrayList<Tax> taxes) {
+    public Central(String name, String address, List<Client> clients, List<Call> calls_history, List<Tax> taxes) {
         this.name = name;
         this.address = address;
         this.clients = clients;
@@ -172,7 +172,6 @@ public class Central {
      */
     public float getMonthEarning(int operation, int month) throws InvalidMonthE {
         if (month < 1 || month > 12) throw new InvalidMonthE();
-
         float earning = 0;
         for (Call call : calls_history) {
             String receiver_country_code = call.getReceiverCountryCode();
@@ -315,6 +314,29 @@ public class Central {
         rounded_owe = rounded_owe.setScale(2, RoundingMode.HALF_UP);
         return rounded_owe.floatValue();
     }
+    public void keepClients() throws IOException{
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("clients.dat"));
+        for(Client client: clients){
+            os.writeObject(client);
+        }
+        os.close();
+    }
+    public void keepCalls() throws IOException{
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("calls.dat"));
+        for(Call call : calls_history){
+            os.writeObject(call);
+        }
+        os.close();
+    }
+
+    public void keepTaxes() throws IOException{
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("taxes.dat"));
+        for(Tax tax : taxes){
+            os.writeObject(tax);
+        }
+        os.close();
+    }
+
 }
 
 

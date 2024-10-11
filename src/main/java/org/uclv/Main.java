@@ -1,5 +1,6 @@
 package org.uclv;
 
+import org.uclv.exceptions.*;
 import org.uclv.models.*;
 import org.uclv.ui.ClientLoginPanel;
 import org.uclv.ui.MainFrame;
@@ -7,6 +8,7 @@ import org.uclv.ui.MainFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -16,7 +18,21 @@ public class Main {
 
     public static void main(String[] args) {
         // Set central's data
-        central = new Central("5301", "123 Main St.", new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        List<Client> clients = new ArrayList<>();
+        List<Tax> taxes = new ArrayList<>();
+        List<Call> calls = new ArrayList<>();
+        List<PhoneNumber> phoneNumbers = new ArrayList<>();
+        central = new Central("5301", "123 Main St.",clients,calls,taxes);
+        try {
+            Client c1=new Client("amalis05","0231",'P');
+            central.addClient(c1);
+            c1.addPhoneNumber(new PhoneNumber("+053","55874212"));
+            c1.addPhoneNumber(new PhoneNumber("+053","55678904"));
+        }
+        catch (WrongCodeFormatE | WrongPhoneNumberFormatE | ClientAlreadyExistsE | PhoneAlreadyExists e) {
+            throw new RuntimeException(e);
+        }
+
 
         // Initialize values
         MainFrame mainFrame = new MainFrame();

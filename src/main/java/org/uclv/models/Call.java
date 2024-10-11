@@ -1,6 +1,8 @@
 package org.uclv.models;
 
-public class Call {
+import java.io.Serializable;
+
+public class Call implements Serializable {
     private String sender_country_code;
     private String sender_location_code;
     private String sender_phone;
@@ -56,6 +58,18 @@ public class Call {
     @Override
     public String toString() {
         return receiver_country_code + "*" + receiver_location_code + "*" + receiver_phone + "*" + sender_country_code + "*" + sender_location_code + "*" + sender_phone + "*" + month;
+    }
+
+    public Call (String Dayos, int time){
+        String [] s = Dayos.split(String.valueOf('*'));
+        receiver_country_code=s[0];
+        receiver_location_code=s[1];
+        receiver_phone=s[2];
+        sender_country_code=s[3];
+        sender_location_code=s[4];
+        sender_phone=s[5];
+        month=Integer.parseInt(s[6]);
+        this.time=time;
     }
 }
 
