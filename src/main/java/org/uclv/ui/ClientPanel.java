@@ -1,6 +1,6 @@
 package org.uclv.ui;
 
-import org.uclv.exceptions.PhoneAlreadyExists;
+import org.uclv.exceptions.PhoneAlreadyExistsE;
 import org.uclv.exceptions.PhoneNumberDoesNotExistsE;
 import org.uclv.exceptions.WrongPhoneNumberFormatE;
 import org.uclv.exceptions.WrongTaxCodeE;
@@ -152,7 +152,7 @@ public class ClientPanel extends JPanel {
                         updatePhoneNumbersPanel();
                     } catch (WrongPhoneNumberFormatE ex) {
                         JOptionPane.showMessageDialog(mainPanel, "Formato de número de teléfono incorrecto");
-                    } catch (PhoneAlreadyExists ex) {
+                    } catch (PhoneAlreadyExistsE ex) {
                         JOptionPane.showMessageDialog(mainPanel, "El número de teléfono ya existe");
                     }
                 }

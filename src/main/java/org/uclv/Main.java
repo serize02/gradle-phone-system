@@ -24,15 +24,11 @@ public class Main {
         List<Call> calls = new ArrayList<>();
         List<PhoneNumber> phoneNumbers = new ArrayList<>();
         central = new Central("5301", "123 Main St.",clients,calls,taxes);
-
-        try {
-            Client c1=new Client("amalis05","0231",'P');
-            central.addClient(c1);
-            c1.addPhoneNumber(new PhoneNumber("+053","55874212"));
-            c1.addPhoneNumber(new PhoneNumber("+053","55678904"));
+        try{
+            central=Main.importData();
         }
-        catch (WrongCodeFormatE | WrongPhoneNumberFormatE | ClientAlreadyExistsE | PhoneAlreadyExists e) {
-            throw new RuntimeException(e);
+        catch (IOException | ClassNotFoundException ex){
+
         }
 
         // Initialize values

@@ -318,28 +318,6 @@ public class Central implements Serializable {
         return rounded_owe.floatValue();
     }
 
-//    public void keepClients() throws IOException{
-//        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("clients.dat"));
-//        for(Client client: clients){
-//            os.writeObject(client);
-//        }
-//        os.close();
-//    }
-//    public void keepCalls() throws IOException{
-//        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("calls.dat"));
-//        for(Call call : calls_history){
-//            os.writeObject(call);
-//        }
-//        os.close();
-//    }
-//
-//    public void keepTaxes() throws IOException{
-//        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("taxes.dat"));
-//        for(Tax tax : taxes){
-//            os.writeObject(tax);
-//        }
-//        os.close();
-//    }
 }
 
 

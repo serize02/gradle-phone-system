@@ -1,8 +1,8 @@
 package org.uclv.exceptions;
 
-public class PhoneAlreadyExists extends Exception{
+public class PhoneAlreadyExistsE extends Exception{
 
-    public PhoneAlreadyExists(){
+    public PhoneAlreadyExistsE(){
         super("This phone number already exists");
     }
 }

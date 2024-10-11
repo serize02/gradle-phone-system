@@ -1,6 +1,6 @@
 package org.uclv.models;
 
-import org.uclv.exceptions.PhoneAlreadyExists;
+import org.uclv.exceptions.PhoneAlreadyExistsE;
 import org.uclv.exceptions.PhoneNumberDoesNotExistsE;
 import org.uclv.exceptions.WrongCodeFormatE;
 
@@ -60,10 +60,10 @@ public class Client implements Serializable {
     }
 
     //CHANGE
-    public void addPhoneNumber(PhoneNumber phone) throws PhoneAlreadyExists {
+    public void addPhoneNumber(PhoneNumber phone) throws PhoneAlreadyExistsE {
         for(PhoneNumber number : phone_numbers){
             if(number.equals(phone)){
-                throw new PhoneAlreadyExists();
+                throw new PhoneAlreadyExistsE();
             }
         }
         phone_numbers.add(phone);
