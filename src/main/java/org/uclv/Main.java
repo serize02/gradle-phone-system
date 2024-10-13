@@ -18,10 +18,6 @@ public class Main {
         try{
             central= importData();
 
-            for( Client client : central.getClients()){
-                System.out.println(client.getUsername());
-            }
-//             Initialize values
             MainFrame mainFrame = new MainFrame();
             cardLayout = mainFrame.getCardLayout();
             mainPanel = mainFrame.getMainPanel();

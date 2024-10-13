@@ -32,7 +32,7 @@ public class AdminPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
 
-        // Header
+        // Título
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 3;
@@ -75,7 +75,7 @@ public class AdminPanel extends JPanel {
         gbc.gridy = 4;
         add(clientScrollPane, gbc);
 
-        // Calls History Panel
+        // Panel de historial de llamadas
         String[] callColumns = {"Emisor", "Receptor", "Duración (segundos)"};
         Object[][] callData = new Object[central.getCalls().size()][3];
         int j = 0;
@@ -101,7 +101,7 @@ public class AdminPanel extends JPanel {
         JScrollPane callScrollPane = new JScrollPane(callTable);
         callTable.setFillsViewportHeight(true);
 
-        // Add headers and tables to the panel
+       // Agrega títulos y tablas de regulación de datos al panel
         gbc.gridx = 0;
         gbc.gridy = 3;
         add(new JLabel("Clientes", JLabel.CENTER), gbc);
@@ -114,7 +114,7 @@ public class AdminPanel extends JPanel {
         gbc.gridx = 1;
         add(callScrollPane, gbc);
 
-        // Earnings Panel
+        //Panel de ganancias
         JPanel earningsPanel = new JPanel(new GridBagLayout());
         earningsPanel.setBackground(Color.WHITE);
         earningsPanel.setBorder(BorderFactory.createTitledBorder("Calcular Ganancias"));
@@ -162,7 +162,7 @@ public class AdminPanel extends JPanel {
         gbc.gridheight = 2;
         add(earningsPanel, gbc);
 
-        // Client Owe Panel
+        // Panel de monto a pagar
         JPanel paymentPanel = new JPanel(new GridBagLayout());
         paymentPanel.setBackground(Color.WHITE);
         paymentPanel.setBorder(BorderFactory.createTitledBorder("Calcular Monto a Pagar"));
@@ -201,7 +201,7 @@ public class AdminPanel extends JPanel {
         add(paymentPanel, gbc);
 
 
-        // Back button
+        // Botón "Atrás"
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 1;
@@ -213,7 +213,7 @@ public class AdminPanel extends JPanel {
         backButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
         add(backButton, gbc);
 
-        // Stats button
+        // Botón "Ver estadísticas"
         gbc.gridx = 1;
         gbc.gridy = 5;
         JButton statsButton = new JButton("Ver Estadísticas");

@@ -33,6 +33,11 @@ public class Tax implements Serializable {
         return value;
     }
 
+    /**
+     * Verifica que el código de país de la tarifa cumpla con el formato establecido
+     * @param country_code Código de país de la tarifa
+     * @throws WrongTaxCodeE
+     */
     private void verifyFormat(String country_code) throws WrongTaxCodeE {
         int index = 1;
         boolean wrong_format = (country_code.charAt(0) != '+') || (country_code.length() != 4);
