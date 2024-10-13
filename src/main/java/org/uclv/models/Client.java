@@ -1,15 +1,27 @@
 package org.uclv.models;
 
+
+
+
+
+
+
+
+
+
+
 import org.uclv.exceptions.PhoneAlreadyExistsE;
 import org.uclv.exceptions.PhoneNumberDoesNotExistsE;
 import org.uclv.exceptions.WrongCodeFormatE;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Client implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String username;
@@ -28,7 +40,6 @@ public class Client implements Serializable {
         return username;
     }
 
-    // TODO check the letters and numbers
     public String getPassword() {
         return password;
     }
@@ -37,7 +48,6 @@ public class Client implements Serializable {
         return type;
     }
 
-    //TODO check the numbers
     public List<PhoneNumber> getPhoneNumbers() {
         return phone_numbers;
     }

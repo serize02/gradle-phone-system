@@ -25,7 +25,6 @@ public class MainFrame extends JFrame {
         add(mainPanel);
         setVisible(true);
 
-
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

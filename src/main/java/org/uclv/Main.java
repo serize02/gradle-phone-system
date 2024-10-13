@@ -16,12 +16,13 @@ public class Main {
 
     public static void main(String[] args) {
         try{
-            central= importData();
-
-            for( Client client : central.getClients()){
-                System.out.println(client.getUsername());
+            File file = new File("src/main/java/org/uclv/data/data.dat");
+            if (!file.exists()){
+                exportData();
+            } else {
+                importData();
             }
-//             Initialize values
+
             MainFrame mainFrame = new MainFrame();
             cardLayout = mainFrame.getCardLayout();
             mainPanel = mainFrame.getMainPanel();
@@ -42,11 +43,10 @@ public class Main {
         os.close();
     }
 
-    public static Central importData() throws IOException, ClassNotFoundException {
+    private static void importData() throws IOException, ClassNotFoundException {
         ObjectInputStream is = new ObjectInputStream(new FileInputStream("src\\main\\java\\org\\uclv\\data\\data.dat"));
-        Central central = (Central) is.readObject();
+        central = (Central) is.readObject();
         is.close();
-        return central;
     }
 
     /**

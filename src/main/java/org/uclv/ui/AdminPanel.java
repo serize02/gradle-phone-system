@@ -80,8 +80,8 @@ public class AdminPanel extends JPanel {
         Object[][] callData = new Object[central.getCalls().size()][3];
         int j = 0;
         for (Call call : central.getCalls()) {
-            callData[j][0] = call.getSenderPhone();
-            callData[j][1] = call.getReceiverPhone();
+            callData[j][0] = call.getSenderCountryCode() + " " + call.getSenderPhone();
+            callData[j][1] = call.getReceiverCountryCode() + " " + call.getReceiverPhone();
             callData[j][2] = call.getTime();
             j++;
         }

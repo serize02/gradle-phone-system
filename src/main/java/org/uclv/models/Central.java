@@ -9,10 +9,9 @@ import java.util.*;
 
 public class Central implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
-
     private String name;
-    // TODO Check whether the name is valid or not
     private String address;
     private List<Client> clients;
     private List<Tax> taxes;
@@ -24,6 +23,27 @@ public class Central implements Serializable {
 
     public List<Tax> getTaxes() {
         return taxes;
+    }
+
+    /**
+     *
+     * @param country_code El codigo de pais del cual se quiere conocer la tarifa
+     * @return La tarifa aplicada a {@code country_code}
+     */
+    public float getTaxValue(String country_code) {
+        int i = 0;
+        float tax = 1;
+
+        // Buscar la tarifa que se le aplica al pais extranjero (siempre existe)
+        while (i < taxes.size() &&  !taxes.get(i).getCountryCode().equals(country_code)) {
+            i++;
+        }
+
+        if (i != taxes.size()) {
+            tax = taxes.get(i).getValue();
+        }
+
+        return tax;
     }
 
     public Central(String name, String address, List<Client> clients, List<Call> calls_history, List<Tax> taxes) {
@@ -51,55 +71,83 @@ public class Central implements Serializable {
     }
 
     /**
-     * @return An ordered List of the Central's clients
+     * @return Una lista ordenada de clientes
      */
     public List<Client> getClients() {
-
         return clients;
     }
 
-    public Client verifyClient(String username, String code) throws InvalidCredentialsE {
+    /**
+     *
+     * @param phone El numero telefonico del cliente
+     * @return El nombre de usuario del cliente3
+     */
+    public String getClientByPhoneNumber(PhoneNumber phone) {
         for (Client client : clients) {
-            if (client.getUsername().equals(username) && client.getPassword().equals(code)) {
+            for (PhoneNumber current_phone : client.getPhoneNumbers()) {
+                if (current_phone.equals(phone)) {
+                    return client.getUsername();
+                }
+            }
+        }
+
+        return "";
+    }
+    /**
+     * Verifica si el cliente se encuentra registrado en la central
+     * @param username Nombre de usuario del cliente
+     * @param password Contraseña del cliente
+     * @return Cliente verificado
+     */
+    public Client verifyClient(String username, String password) throws InvalidCredentialsE {
+        for (Client client : clients) {
+            if (client.getUsername().equals(username) && client.getPassword().equals(password)) {
                 return client;
             }
         }
         throw new InvalidCredentialsE();
     }
 
-    // TODO Not Used
-    public Client getClientByCode(String code) {
-        for (Client client : clients) {
-            if (client.getPassword().equals(code)) {
-                return client;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Agrega ordenadamente un cliente a la lista de clientes de la central
+     * @param client Cliente a ser agregado
+     */
     public void addClient(Client client) throws ClientAlreadyExistsE {
         if (!clients.contains(client)) {
             clients.add(client);
-            return;
+            clients.sort(new Comparator<Client>() {
+                @Override
+                public int compare(Client o1, Client o2) {
+                    return o1.getUsername().compareTo(o2.getUsername());
+                }
+            });
+        } else {
+            throw new ClientAlreadyExistsE();
         }
-        throw new ClientAlreadyExistsE();
     }
 
+    /**
+     * Agrega una llamada a la lista de llamadas de la central
+     * @param call Llamada a ser agregada
+     */
     public void addCall(Call call) {
-
         calls_history.add(call);
     }
 
+    /**
+     * Agrega una tarifa a la lista de tarifas de la central
+     * @param tax Tarifa a ser agregada
+     */
     public void addTax(Tax tax) {
         taxes.add(tax);
     }
 
     /**
-     *
-     * @param period The period to be checked
-     * @return {@code 0} if the given period is valid
+     * Verifica si un periodo dado es valido
+     * @param period El periodo a ser verificado
+     * @return {@code 0} si el periodo es valido
      *         <br>
-     *         {@code 1} if the given period is not valid
+     *         {@code 1} si el periodo es invalido
      */
     private boolean invalidPeriod(String period) {
         String[] months = period.split("-");
@@ -120,66 +168,14 @@ public class Central implements Serializable {
     }
 
     /**
-     * @param call The call we want to know the cost of
-     * @return The cost of the given call
-     */
-    public float getCallCost(Call call) {
-        String receiver_country_code = call.getReceiverCountryCode();
-        String sender_country_code = call.getSenderCountryCode();
-        String receiver_location_code = call.getReceiverLocationCode();
-        String sender_location_code = call.getSenderLocationCode();
-        float cost = 0;
-
-        // If receiver and sender codes are equal, it's a national call
-        if (receiver_country_code.equals(sender_country_code)) {
-            cost = Math.abs(Integer.parseInt(receiver_location_code) - Integer.parseInt(sender_location_code));
-
-            // If location codes are equal, it's a call in the same location
-            if (cost == 0) {
-                cost = (float) call.getTime() / 60;
-            } else {
-                cost *= (float) call.getTime() / 60;
-            }
-        } else {
-            String country_code;
-            String location_code;
-
-            // As the central is in Cuba, either the sender or the receiver must be cuban. Get the one that's not
-            if (!receiver_country_code.equals("+053")) {
-                country_code = receiver_country_code;
-                location_code = receiver_location_code;
-            } else {
-                country_code = sender_country_code;
-                location_code = sender_location_code;
-            }
-
-            int i = 0;
-
-            // Search for the tax that matches country and location codes (It's guaranteed that exists)
-           while (i < taxes.size() &&  !taxes.get(i).getCountryCode().equals(country_code)) {
-                i++;
-            }
-
-            // As time is in seconds, convert to minutes
-            cost = (float) call.getTime() / 60;
-            cost *= taxes.get(i).getValue();
-        }
-
-        // Round the cost to 2 decimals
-        BigDecimal rounded_cost = new BigDecimal(cost);
-        rounded_cost = rounded_cost.setScale(2, RoundingMode.HALF_UP);
-        return rounded_cost.floatValue();
-    }
-
-    /**
-     * @param operation An integer between 1 and 3, each one standing for:
+     * @param operation Un entero entre 1 y 3, cada uno correspondiendo a:
      *                  <ol>
-     *                   <li>National Calls</li>
-     *                   <li>International Calls</li>
+     *                   <li>Llamadas nacionales</li>
+     *                   <li>Llamadas interncionales</li>
      *                   <li>Total</li>
      *                  </ol>
-     * @param month     An integer between 1 and 12 representing each month
-     * @return Earnings matching the specified {@code operation} and {@code month}
+     * @param month     Un entero entre 1 y 12 representando el mes
+     * @return Las ganancias que responden a {@code operation} y {@code month}
      */
     public float getMonthEarning(int operation, int month) throws InvalidMonthE {
         if (month < 1 || month > 12) throw new InvalidMonthE();
@@ -189,30 +185,30 @@ public class Central implements Serializable {
             String sender_country_code = call.getSenderCountryCode();
             int call_month = call.getMonth();
 
-            //If the call's month matches the month queried, process it
+            //Procesar la llamada si coincide con el mes especificado
             if (call_month == month) {
                 switch (operation) {
                     case 1:
-                        // Get earnings from National Calls (country codes are equal)
+                        // Obtener las ganancias nacionales (los codigos son iguales)
                         if (receiver_country_code.equals(sender_country_code)) {
-                            earning += getCallCost(call);
+                            earning += call.getCost(getTaxValue(receiver_country_code));
                         }
                         break;
                     case 2:
-                        // Get earnings from International Calls (country codes are not equal)
+                        // Obtener ganancias de llamadas internacionales
                         if (!receiver_country_code.equals(sender_country_code)) {
-                            earning += getCallCost(call);
+                            earning += call.getCost(getTaxValue(receiver_country_code));
                         }
                         break;
                     case 3:
-                        // Get total earnings
-                        earning += getCallCost(call);
+                        // Obtener las ganancias totales
+                        earning += call.getCost(getTaxValue(receiver_country_code));
                         break;
                 }
             }
         }
 
-        // Round the earning to 2 decimals
+        // Redondear a 2 decimales
         BigDecimal rounded_earning = new BigDecimal(earning);
         rounded_earning = rounded_earning.setScale(2, RoundingMode.HALF_UP);
         return rounded_earning.floatValue();
@@ -220,13 +216,13 @@ public class Central implements Serializable {
 
 
     /**
-     * @param max_ax The minimum cost a call must have to be returned
-     * @return A list of calls that exceed the specified cost
+     * @param max_ax El costo minimo que debe tener una llamada para ser devuelta
+     * @return Una lista de llamadas que exceden {@code max_ax}
      */
     public List<Call> getOverPays(float max_ax) {
         List<Call> overpays = new ArrayList<>();
         for(Call call: calls_history) {
-            if (getCallCost(call) > max_ax) {
+            if (call.getCost(getTaxValue(call.getReceiverCountryCode())) > max_ax) {
                 overpays.add(call);
             }
         }
@@ -234,23 +230,23 @@ public class Central implements Serializable {
     }
 
     /**
-     * @param n      Minimum number of calls a country must have to be returned
-     * @param period Period of time in which the calls should have been made.
-     *               It has to have the format {@code dd-mm-yyyy}.
-     * @return A list of countries called more than {@code k} times
+     * @param n      Minimo numero de llamadas que debe tener un pais para ser devuelto.
+     * @param period Periodo de tiempo en el cual deben ser hechas las llamadas.
+     *               Debe tener el formato {@code mm-mm}.
+     * @return Una lista de paises a los que se realizaron más de {@code n} llamadas.
      */
-    // TODO Error to check the period is valid ************* CHANGE
     public List<Map.Entry<String, Integer>> getHotCountries(String period, int n) throws WrongPeriodFormatE {
-        int counter = 0;
-
+        // Si el periodo no es valido, se eleva la excepcion
         if (invalidPeriod(period)) throw new WrongPeriodFormatE();
 
+        // Obtener el mes de inicio y de final
         String[] s = period.split("-");
         int start = Integer.parseInt(s[0]);
         int end = Integer.parseInt(s[1]);
 
         Map<String, Integer> map = new HashMap<>();
 
+        // Agregar al mapa las llamadas por pais
         for(Call call: calls_history){
             if (call.getMonth() >= start && call.getMonth() <= end){
                 if(map.containsKey(call.getReceiverCountryCode())) {
@@ -263,6 +259,7 @@ public class Central implements Serializable {
 
         List<Map.Entry<String, Integer>> hotCountries = new ArrayList<>();
 
+        // Agregar los paises a los que se hicieron mas de n llamadas
         for(Map.Entry<String, Integer> entry: map.entrySet()) {
             if(entry.getValue() >= n) {
                 hotCountries.add(entry);
@@ -272,20 +269,23 @@ public class Central implements Serializable {
     }
 
     /**
-     * @param period Period of time in which the calls should have been made.
-     *               It has to have the format {@code mm-mm}.
-     * @return A list of provinces/locations called in a given period
+     * @param period Periodo en que las llamadas deben haber sido realizadas.
+     *               Debe tener el formato {@code mm-mm}.
+     * @return Una lista de paises a los cuales se llamo en el periodo establecido.
      */
 
     public List<Map.Entry<String, Integer>> getProvinces(String period) throws WrongPeriodFormatE {
+        // Si el periodo no es valido, se eleva la excepcion
         if (invalidPeriod(period)) throw new WrongPeriodFormatE();
 
+        // Obtener el mes de inicio y de final
         String[] s = period.split("-");
         int start = Integer.parseInt(s[0]);
         int end = Integer.parseInt(s[1]);
 
         Map<String, Integer> map = new HashMap<>();
 
+        // Agregar al mapa las llamadas por provincia
         for(Call call: calls_history){
             if (call.getMonth() >= start && call.getMonth() <= end){
                 if(map.containsKey(call.getReceiverLocationCode())) {
@@ -300,8 +300,8 @@ public class Central implements Serializable {
     }
 
     /**
-     * @param phone Phone number of the client
-     * @return How much a client has to pay
+     * @param phone Numero telefonico del cliente
+     * @return Cuanto el cliente debe pagar por llamadas realizadas a traves de {@code phone}.
      */
 
     public float getClientOwe(String phone) throws ClientDoesNotExistsE {
@@ -309,23 +309,23 @@ public class Central implements Serializable {
         boolean client_not_found = true;
 
         for (Call call : calls_history) {
-            // Check the call is in the period queried and the client who made the call matches
+            // Verificar emisor de la llamada
             if (call.getSenderPhone().equals(phone)) {
-                owe += getCallCost(call);
+                owe += call.getCost(getTaxValue(call.getReceiverCountryCode()));
                 client_not_found = false;
             }
         }
 
+        // Si el cliente no se encontro, se eleva un error
         if (client_not_found) {
             throw new ClientDoesNotExistsE();
         }
 
-        // Round owe to 2 decimals
+        // Redondear el monto a pagar a 2 decimales
         BigDecimal rounded_owe = new BigDecimal(owe);
         rounded_owe = rounded_owe.setScale(2, RoundingMode.HALF_UP);
         return rounded_owe.floatValue();
     }
-
 }
 
 

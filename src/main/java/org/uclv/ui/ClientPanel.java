@@ -37,13 +37,14 @@ public class ClientPanel extends JPanel {
     }
 
     private void init() {
+        // Crear e inicializar las componentes
         setBackground(Color.WHITE);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Profile icon
+        // Icono del perfil
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         URL url = classloader.getResource("profile.jpg");
         ImageIcon profileIconImage = new ImageIcon(url);
@@ -54,19 +55,16 @@ public class ClientPanel extends JPanel {
         gbc.gridwidth = 2;
         add(profileIcon, gbc);
 
-        // Username
         JLabel usernameLabel = new JLabel("Usuario: " + client.getUsername());
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridy = 1;
         add(usernameLabel, gbc);
 
-        // Client type
         JLabel typeLabel = new JLabel("Tipo de Cliente: " + (client.getType() == 'E' ? "Estatal" : "Particular"));
         typeLabel.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridy = 2;
         add(typeLabel, gbc);
 
-        // Phone Numbers Panel
         phoneNumbersPanel = new JPanel();
         phoneNumbersPanel.setBackground(Color.WHITE);
         phoneNumbersPanel.setLayout(new BoxLayout(phoneNumbersPanel, BoxLayout.Y_AXIS));
@@ -79,7 +77,6 @@ public class ClientPanel extends JPanel {
         gbc.gridwidth = 1;
         add(phoneScrollPane, gbc);
 
-        // Recent Calls Panel
         recentCallsPanel = new JPanel();
         recentCallsPanel.setBackground(Color.WHITE);
         recentCallsPanel.setLayout(new BoxLayout(recentCallsPanel, BoxLayout.Y_AXIS));
@@ -91,7 +88,6 @@ public class ClientPanel extends JPanel {
         gbc.gridx = 1;
         add(callsScrollPane, gbc);
 
-        // Buttons Panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.setBackground(Color.WHITE);
@@ -211,7 +207,7 @@ public class ClientPanel extends JPanel {
         phoneNumbersPanel.removeAll();
         if (client.getPhoneNumbers() != null) {
             for (PhoneNumber phoneNumber : client.getPhoneNumbers()) {
-                JPanel phonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Reduced margin
+                JPanel phonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
                 JLabel phoneLabel = new JLabel(phoneNumber.getCountryCode() + " " + phoneNumber.getNumber());
                 phoneLabel.setFont(new Font("Arial", Font.PLAIN, 14));
                 phonePanel.add(phoneLabel);
@@ -248,7 +244,8 @@ public class ClientPanel extends JPanel {
                                     try {
                                         client.removePhoneNumber(phoneNumber);
                                         JOptionPane.showMessageDialog(mainPanel, "Número de teléfono eliminado exitosamente");
-                                        updatePhoneNumbersPanel(); // Refrescar el panel de números de teléfono
+                                        // Refrescar el panel de números de teléfono
+                                        updatePhoneNumbersPanel();
                                     } catch (PhoneNumberDoesNotExistsE ex) {
                                         JOptionPane.showMessageDialog(mainPanel, "El número de teléfono no existe");
                                     }
@@ -308,7 +305,7 @@ public class ClientPanel extends JPanel {
                 String receiverCountryCode = receiverCountryCodeField.getText().trim();
                 String receiverLocation = receiverLocationField.getText().trim();
                 String receiverPhone = receiverPhoneField.getText().trim();
-                int month = monthComboBox.getSelectedIndex() + 1; // Meses de 1 a 12
+                int month = monthComboBox.getSelectedIndex() + 1;
                 int time = Integer.parseInt(timeField.getText().trim());
 
                 if (senderLocation.isBlank() || receiverCountryCode.isBlank() || receiverLocation.isBlank() ||
@@ -334,6 +331,7 @@ public class ClientPanel extends JPanel {
                 String internationalCode = !receiverCountryCode.equals("+053") ? receiverCountryCode : selectedPhoneNumber.getCountryCode();
 
                 if(!internationalCode.equals("+053")){
+                    // Crear la tarifa si esta no existe
                     List<Tax> taxes = central.getTaxes();
 
                     int i = 0;
@@ -342,16 +340,15 @@ public class ClientPanel extends JPanel {
                     }
 
                     if(i == taxes.size()){
-                        float new_tax = (float)(Math.random()*100 + 1);
-                        // Round the tax to 2 decimals
+                        float new_tax = (float)(Math.random()*99 + 2);
+                        // Redondear la tarifa a 2 decimales
                         BigDecimal rounded_tax = new BigDecimal(new_tax);
                         new_tax = rounded_tax.setScale(2, RoundingMode.HALF_UP).floatValue();
                         central.addTax(new Tax(receiverCountryCode, central.getName(), new_tax));
-                        System.out.println(new_tax);
                     }
                 }
 
-                if (receiverPhone.equals(selectedPhoneNumber.getNumber()) && receiverPhone.equals(selectedPhoneNumber.getCountryCode())) {
+                if (receiverPhone.equals(selectedPhoneNumber.getNumber()) && receiverCountryCode.equals(selectedPhoneNumber.getCountryCode())) {
                     JOptionPane.showMessageDialog(mainPanel, "No se puede llamar al mismo número seleccionado");
                     return;
                 }
@@ -389,11 +386,11 @@ public class ClientPanel extends JPanel {
             // Round the time to 2 decimals
             BigDecimal rounded_time = new BigDecimal(time_m);
             rounded_time = rounded_time.setScale(2, RoundingMode.HALF_UP);
-            JPanel callPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Reduced margin
+            JPanel callPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
             JLabel callLabel = new JLabel(
                     "De: "  + call.getSenderCountryCode() + " " + call.getSenderPhone() +
                             " A: " + call.getReceiverCountryCode() + " " + call.getReceiverPhone() +
-                            " Tiempo: " + rounded_time + "m"
+                            " Tiempo: " + rounded_time + " min"
             );
             callLabel.setFont(new Font("Arial", Font.PLAIN, 14));
             callPanel.add(callLabel);

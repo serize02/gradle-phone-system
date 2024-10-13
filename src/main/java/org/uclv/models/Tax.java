@@ -3,11 +3,13 @@ package org.uclv.models;
 import org.uclv.exceptions.WrongCodeFormatE;
 import org.uclv.exceptions.WrongTaxCodeE;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
 public class Tax implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private String country_code;

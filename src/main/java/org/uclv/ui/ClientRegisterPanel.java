@@ -26,6 +26,7 @@ public class ClientRegisterPanel extends JPanel {
     }
 
     public void init(){
+        // Crear e inicializar las componentes
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -75,6 +76,7 @@ public class ClientRegisterPanel extends JPanel {
         gbc.gridy = 4;
         add(backButton, gbc);
 
+        // Listeners
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,10 +85,10 @@ public class ClientRegisterPanel extends JPanel {
                 char type = typeComboBox.getSelectedIndex() == 0 ? 'E' : 'P';
 
                 try {
-                    central.addClient(new Client(username, code, type));
+                    Client client = new Client(username, code, type);
+                    central.addClient(client);
                     JOptionPane.showMessageDialog(mainPanel, "Cliente registrado exitosamente");
-                    Client client = central.getClients().getLast();
-                    mainPanel.add( new ClientPanel(client, central,  cardLayout, mainPanel), "clientPanel" );
+                    mainPanel.add(new ClientPanel(client, central,  cardLayout, mainPanel), "clientPanel" );
                     cardLayout.show(mainPanel, "clientPanel");
                 } catch (ClientAlreadyExistsE ex) {
                     JOptionPane.showMessageDialog(mainPanel, "El cliente ya existe");

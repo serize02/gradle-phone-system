@@ -8,8 +8,10 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.uclv.exceptions.WrongPeriodFormatE;
+import org.uclv.exceptions.WrongPhoneNumberFormatE;
 import org.uclv.models.Call;
 import org.uclv.models.Central;
+import org.uclv.models.PhoneNumber;
 
 import javax.swing.*;
 import java.awt.*;
@@ -189,14 +191,20 @@ public class StatsPanel extends JPanel {
             displayNoData(chartContainerPanel);
             return;
         } else {
-            String[] columnNames = {"Número del Emisor", "País del Receptor", "Localización del Receptor", "Costo de la Llamada"};
-            Object[][] data = new Object[overpays.size()][4];
+            String[] columnNames = {"Cliente","Número del Cliente", "País del Receptor", "Localización del Receptor", "Costo de la Llamada"};
+            Object[][] data = new Object[overpays.size()][5];
             for (int i = 0; i < overpays.size(); i++) {
                 Call call = overpays.get(i);
-                data[i][0] = call.getSenderPhone();
-                data[i][1] = call.getReceiverCountryCode();
-                data[i][2] = call.getReceiverLocationCode();
-                data[i][3] = central.getCallCost(call);
+                try {
+                    PhoneNumber phone = new PhoneNumber(call.getSenderCountryCode(), call.getSenderPhone());
+                    data[i][0] = central.getClientByPhoneNumber(phone);
+                    data[i][1] = phone;
+                } catch (WrongPhoneNumberFormatE ex) {
+                    JOptionPane.showMessageDialog(mainPanel, "Formato de número telefónico inválido");
+                }
+                data[i][2] = call.getReceiverCountryCode();
+                data[i][3] = call.getReceiverLocationCode();
+                data[i][4] = call.getCost(central.getTaxValue(call.getReceiverCountryCode()));
             }
 
             JTable table = new JTable(data, columnNames);
