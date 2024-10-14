@@ -53,6 +53,7 @@ public class AdminLoginPanel extends JPanel {
 
         loginButton.addActionListener(new ActionListener() {
             @Override
+            //Verifica que la contraseña de inicio de sesión sea "admin" , de lo contrario denega la entrada
             public void actionPerformed(ActionEvent e) {
                 if(passwordField.getText().equals("admin")){
                     mainPanel.add(new AdminPanel(central, cardLayout, mainPanel), "adminPanel");

@@ -326,6 +326,20 @@ public class Central implements Serializable {
         rounded_owe = rounded_owe.setScale(2, RoundingMode.HALF_UP);
         return rounded_owe.floatValue();
     }
+
+    public boolean phoneFound(PhoneNumber phone) {
+        int i = 0;
+        boolean search = false;
+        for (Client client : clients) {
+            for (PhoneNumber phoneNumber : client.getPhoneNumbers()) {
+                if (phoneNumber.equals(phone)) {
+                    search = true;
+                }
+            }
+        }
+            return search;
+
+    }
 }
 
 

@@ -143,6 +143,7 @@ public class ClientPanel extends JPanel {
 
                     try {
                         PhoneNumber phoneNumber = new PhoneNumber(countryCode, number);
+                        if(central.phoneFound(phoneNumber)) throw new PhoneAlreadyExistsE();
                         client.addPhoneNumber(phoneNumber);
                         JOptionPane.showMessageDialog(mainPanel, "Número de teléfono agregado exitosamente");
                         updatePhoneNumbersPanel();

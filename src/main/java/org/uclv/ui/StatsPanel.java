@@ -47,6 +47,7 @@ public class StatsPanel extends JPanel {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+       // Panel de control de países más llamados
         JPanel controlPanel = new JPanel(new GridBagLayout());
         controlPanel.setBorder(BorderFactory.createTitledBorder("Panel de Control"));
         controlPanel.setBackground(Color.WHITE);
@@ -77,6 +78,7 @@ public class StatsPanel extends JPanel {
         gbc.gridy = 0;
         controlAndChartPanel.add(controlPanel, gbc);
 
+        // Panel de provincia más llamada
         JPanel hotProvincePanel = new JPanel(new GridBagLayout());
         hotProvincePanel.setBorder(BorderFactory.createTitledBorder("Provincia más llamada"));
         hotProvincePanel.setBackground(Color.WHITE);
@@ -101,6 +103,7 @@ public class StatsPanel extends JPanel {
         gbc.gridwidth = 2;
         controlAndChartPanel.add(hotProvincePanel, gbc);
 
+        //Panel de llamadas a sobreprecio
         JPanel overpricedCallsPanel = new JPanel(new GridBagLayout());
         overpricedCallsPanel.setBorder(BorderFactory.createTitledBorder("Llamadas a Sobreprecio"));
         overpricedCallsPanel.setBackground(Color.WHITE);
@@ -125,6 +128,7 @@ public class StatsPanel extends JPanel {
         gbc.gridwidth = 2;
         controlAndChartPanel.add(overpricedCallsPanel, gbc);
 
+        //Botón "Atrás"
         JButton backButton = new JButton("Atrás");
         backButton.setBackground(new Color(220, 53, 69));
         backButton.setForeground(Color.WHITE);
@@ -162,6 +166,7 @@ public class StatsPanel extends JPanel {
 
         showHotProvincesButton.addActionListener(new ActionListener() {
             @Override
+            //Verifica que el período tenga formato correcto
             public void actionPerformed(ActionEvent e) {
                 String period = hotProvincePeriodField.getText().trim();
                 try {

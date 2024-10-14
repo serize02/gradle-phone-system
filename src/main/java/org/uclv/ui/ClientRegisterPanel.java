@@ -81,11 +81,11 @@ public class ClientRegisterPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
-                String code = new String(codeField.getPassword());
+                String password = new String(codeField.getPassword());
                 char type = typeComboBox.getSelectedIndex() == 0 ? 'E' : 'P';
 
                 try {
-                    Client client = new Client(username, code, type);
+                    Client client = new Client(username, password, type);
                     central.addClient(client);
                     JOptionPane.showMessageDialog(mainPanel, "Cliente registrado exitosamente");
                     mainPanel.add(new ClientPanel(client, central,  cardLayout, mainPanel), "clientPanel" );
@@ -93,8 +93,13 @@ public class ClientRegisterPanel extends JPanel {
                 } catch (ClientAlreadyExistsE ex) {
                     JOptionPane.showMessageDialog(mainPanel, "El cliente ya existe");
                 } catch (WrongCodeFormatE ex) {
-                    JOptionPane.showMessageDialog(mainPanel, "El nombre de usuario debe ser alfanumérico");
+                    if (password.isEmpty()) {
+                        JOptionPane.showMessageDialog(mainPanel, "La contraseña no puede estar vacía");
+                    } else {
+                        JOptionPane.showMessageDialog(mainPanel, "El nombre de usuario deben ser 6 caraceteres alfanuméricos");
+                    }
                 }
+
 
             }
         });

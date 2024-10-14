@@ -30,7 +30,7 @@ public class Client implements Serializable {
     private char type;
 
     public Client(String username, String password, char type) throws WrongCodeFormatE {
-        verifyFormat(username);
+        verifyFormat(username,password);
         this.username = username;
         this.password = password;
         this.type = type;
@@ -52,8 +52,13 @@ public class Client implements Serializable {
         return phone_numbers;
     }
 
-    private void verifyFormat(String username) throws WrongCodeFormatE {
-        boolean wrong_username = false;
+    /**
+     * Verifica si el nombre de usuario tiene el formato establecido y la contraseña no está vacía
+     * @param username Nombre de usuario del cliente
+     * @param password Contraseña del cliente
+     */
+    private void verifyFormat(String username,String password) throws WrongCodeFormatE {
+        boolean wrong_username = (username.length() !=6 || password.isEmpty());
         int index = 0;
 
         while (index < username.length() && !wrong_username) {
@@ -69,7 +74,11 @@ public class Client implements Serializable {
 
     }
 
-    //CHANGE
+    /**
+     * Agrega el número de teléfono pasado por parámetro al listado de números de teléfono del cliente
+     * @param phone Número de teléfono que se desea agregar
+     * @throws PhoneAlreadyExistsE Verifica que el número no exista ya, antes de agregarlo
+     */
     public void addPhoneNumber(PhoneNumber phone) throws PhoneAlreadyExistsE {
         for(PhoneNumber number : phone_numbers){
             if(number.equals(phone)){
@@ -79,6 +88,11 @@ public class Client implements Serializable {
         phone_numbers.add(phone);
     }
 
+    /**
+     * Elimina el número de teléfono pasado por parámetro del listado de números de teléfono del cliente
+     * @param phone Número de teléfono que se desea eliminar
+     * @throws PhoneNumberDoesNotExistsE Verifica que el número exista, antes de eliminarlo
+     */
     public void removePhoneNumber(PhoneNumber phone) throws PhoneNumberDoesNotExistsE {
         if (phone_numbers.contains(phone)) {
             phone_numbers.remove(phone);

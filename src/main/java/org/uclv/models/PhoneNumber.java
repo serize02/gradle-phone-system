@@ -37,6 +37,13 @@ public class PhoneNumber implements Serializable {
         this.number = number;
     }
 
+
+    /**
+     * Verifica que el código del país y el número de teléfono cumplen el formato establecido
+     * @param cc Código de país del número de teléfono
+     * @param number Número de teléfono
+     * @throws WrongPhoneNumberFormatE
+     */
     private void verifyFormat(String cc, String number) throws WrongPhoneNumberFormatE {
         if(cc.isEmpty() || number.isEmpty() || cc.charAt(0) != '+' || cc.length() != 4){
             throw new WrongPhoneNumberFormatE();
