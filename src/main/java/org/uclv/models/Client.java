@@ -1,15 +1,5 @@
 package org.uclv.models;
 
-
-
-
-
-
-
-
-
-
-
 import org.uclv.exceptions.PhoneAlreadyExistsE;
 import org.uclv.exceptions.PhoneNumberDoesNotExistsE;
 import org.uclv.exceptions.WrongCodeFormatE;

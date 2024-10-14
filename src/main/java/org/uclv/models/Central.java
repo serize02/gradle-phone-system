@@ -328,7 +328,6 @@ public class Central implements Serializable {
     }
 
     public boolean phoneFound(PhoneNumber phone) {
-        int i = 0;
         boolean search = false;
         for (Client client : clients) {
             for (PhoneNumber phoneNumber : client.getPhoneNumbers()) {
@@ -337,8 +336,7 @@ public class Central implements Serializable {
                 }
             }
         }
-            return search;
-
+        return search;
     }
 }
 
