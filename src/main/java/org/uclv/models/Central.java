@@ -21,6 +21,7 @@ public class Central implements Serializable {
         return calls_history;
     }
 
+
     public List<Tax> getTaxes() {
         return taxes;
     }
@@ -30,7 +31,7 @@ public class Central implements Serializable {
      * @param country_code El codigo de pais del cual se quiere conocer la tarifa
      * @return La tarifa aplicada a {@code country_code}
      */
-    public float getTaxValue(String country_code) {
+        public float getTaxValue(String country_code) {
         int i = 0;
         float tax = 1;
 

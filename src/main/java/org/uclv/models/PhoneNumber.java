@@ -1,6 +1,5 @@
 package org.uclv.models;
 
-
 import org.uclv.exceptions.WrongPhoneNumberFormatE;
 
 import java.io.Serial;
@@ -27,7 +26,7 @@ public class PhoneNumber implements Serializable {
         return country_code;
     }
 
-    public void setCountry_code(String country_code) {
+    public void setCountryCode(String country_code) {
         this.country_code = country_code;
     }
 

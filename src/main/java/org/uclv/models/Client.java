@@ -1,15 +1,5 @@
 package org.uclv.models;
 
-
-
-
-
-
-
-
-
-
-
 import org.uclv.exceptions.PhoneAlreadyExistsE;
 import org.uclv.exceptions.PhoneNumberDoesNotExistsE;
 import org.uclv.exceptions.WrongCodeFormatE;
@@ -20,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client implements Serializable {
-
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -69,7 +58,6 @@ public class Client implements Serializable {
 
     }
 
-    //CHANGE
     public void addPhoneNumber(PhoneNumber phone) throws PhoneAlreadyExistsE {
         for(PhoneNumber number : phone_numbers){
             if(number.equals(phone)){
